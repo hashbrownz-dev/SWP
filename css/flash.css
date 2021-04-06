@@ -1,0 +1,50 @@
+.timer{
+    height: 8px;
+    width: 75%;
+    margin: 0 auto;
+}
+.timer > div{
+    margin: 0 auto;
+}
+.flashcard{
+    background: white;
+    color: var(--hfw-pink);
+    border: 4px solid var(--hfw-teal);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 72px;
+    margin: 10px;
+    padding: 48px 0;
+}
+
+.controls{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnFlash{
+    background: white;
+    border: 4px solid var(--hfw-teal);
+    border-radius: 10px;
+    padding: 0;
+    margin: 15px 10px;
+    outline: none;
+    transform: translateY(-5px);
+    box-shadow: 0 5px lightgray;
+}
+
+.btnFlash:hover{
+    cursor: pointer;
+}
+
+.btnFlash:active{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+@media screen and (min-width: 960px){
+    .flashcard{
+        margin: 10px 0;
+    }
+}

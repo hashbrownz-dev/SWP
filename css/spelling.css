@@ -1,0 +1,84 @@
+.card{
+    background-color: white;
+    border: 3px solid var(--hfw-teal);
+    border-radius: 10px;
+    margin: 10px;
+}
+.word{
+    color: var(--hfw-pink);
+    font-size: 60px;
+    text-align: center;
+    margin: 0;
+}
+.soundbutton{
+    background: transparent;
+    border: none;
+    outline: none;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.soundbutton > img{
+    width: 60px;
+}
+.letter-container{
+    display: flex;
+    justify-content: center;
+}
+.letter{
+    width: 30px;
+    font-size: 36px;
+    text-align: center;
+    color: #cccccc;
+    background: #e6e6e6;
+    margin: 5px 2.5px;
+    border-radius: 5px;
+}
+.selected{
+    color: white;
+    background: white;
+    border: 3px solid var(--hfw-teal);
+}
+.complete{
+    color: var(--hfw-pink);
+    background: white;
+    margin-left: 0;
+    margin-right: 0;
+}
+.hand{
+    display: flex;
+    flex-wrap: wrap;
+    width: 320px;
+    margin: 0 auto;
+}
+.letter-button{
+    width: 60px;
+    border: 3px solid var(--hfw-teal);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: var(--hfw-pink);
+    background: white;
+    font-size: 40px;
+    outline: none;
+    margin: 10px;
+    transform: translateY(-5px);
+    box-shadow: 0 5px lightgray;
+}
+.letter-button:active{
+    transform:translateY(0);
+    box-shadow: none;
+}
+.letter-button:disabled{
+    /*text-decoration: line-through;*/
+    color: #cccccc;
+    background: #ffffff;
+    border-color: #cccccc;
+    transform: translateY(0);
+    box-shadow: none;
+}
+.congrats{
+    text-align: center;
+    font-size: 46px;
+    font-weight: bold;
+    color: var(--hfw-teal);
+}
