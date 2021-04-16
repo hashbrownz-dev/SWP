@@ -138,6 +138,7 @@ function drawCard(){
                 }
             }else{
                 //play some negative sound
+                _sndNo.currentTime = 0;
                 _sndNo.play();
             }
         });

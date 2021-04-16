@@ -18,17 +18,8 @@ let deck,           //the list our game will use
     incorrect = [], //An Array containing the incorrect choices as word objects
     ct,             //For Flashcards.  Used to control the timer
     selection,      //For wordID and Spelling.  The selected answer
-    guesses = 0;    //For wordID and Spelling.  The number of incorrect guesses.
-
-container.appendChild(form);
-listcontainer.appendChild(labellist);
-listcontainer.appendChild(selectlist);
-form.appendChild(listcontainer);
-form.appendChild(fieldset);
-fieldset.appendChild(legend);
-form.appendChild(shuffl);
-form.appendChild(shuff);
-form.appendChild(start);
+    guesses = 0,    //For wordID and Spelling.  The number of incorrect guesses.
+    reps = 0;       //Repeat the current activity n times.
 
 form.className = 'options';
 legend.innerHTML = 'Words';
@@ -42,6 +33,19 @@ shuffl.innerHTML = 'Shuffle?';
 shuffl.htmlFor = 'shuff';
 start.type = 'button';
 start.innerHTML = 'Start';
+start.className = 'formbtn';
+
+container.appendChild(form);
+listcontainer.appendChild(labellist);
+listcontainer.appendChild(selectlist);
+form.appendChild(listcontainer);
+form.appendChild(fieldset);
+fieldset.appendChild(legend);
+form.appendChild(shuffl);
+shuffl.appendChild(shuff);
+form.appendChild(buildRepInp(8));
+form.appendChild(start);
+
 start.addEventListener('click', () => {
     deck = buildGL();
     if(shuff.checked == true)shuffle(deck.words);
@@ -103,6 +107,7 @@ function selectAll(){
     let button = document.createElement('button');
     button.type = 'button';
     button.innerHTML = 'Select All';
+    button.className = 'formbtn';
     button.addEventListener('click', () => {
         let words = document.querySelectorAll('fieldset > div > input[type="checkbox"]');
         for(let word of words){
@@ -116,6 +121,7 @@ function selectNone(){
     let button = document.createElement('button');
     button.type = 'button';
     button.innerHTML = 'Select None';
+    button.className = 'formbtn';
     button.addEventListener('click', () => {
         let words = document.querySelectorAll('fieldset > div > input[type="checkbox"]');
         for(let word of words){
@@ -124,14 +130,33 @@ function selectNone(){
     });
     return button;
 }
+//Repeat
+function buildRepInp(cap){
+    const rep = document.createElement('select'),
+        lbl = document.createElement('label');
+    rep.id = 'reps';
+    rep.name = 'reps';
+    lbl.innerHTML = 'Repeat: ';
+    for(let i = 1; i <= cap; i++){
+        let opt = document.createElement('option');
+        opt.innerHTML = `${i}x`;
+        opt.value = i;
+        rep.appendChild(opt);
+    }
+    lbl.appendChild(rep);
+    return lbl;
+}
 
 //build game list
 function buildGL(){
     let w = [];
     let name = _FirstGradeSW.find(list => list.name === selectlist.value);
     let checked = document.querySelectorAll('fieldset > div > input[type="checkbox"]:checked');
-    for(let c of checked){
-        w.push(new Word(c.value, `audio/words/${c.value}.wav`));
+    reps = document.getElementById('reps').value;
+    for(let i = reps; i > 0; i--){
+        for(let c of checked){
+            w.push(new Word(c.value, `audio/words/${c.value}.wav`));
+        }
     }
     return new List(name.name, w)
 }
@@ -145,6 +170,26 @@ function shuffle(deck){
         deck[i] = temp;
     }
     return deck;
+}
+
+//CORRECT / INCORRECT LISTS
+
+function evalResults(){
+    let eval = [];
+    for(let i = correct.length-1; i >= 0; i--){
+        let check = correct.pop();
+        let corr = eval.find(element => element.word.name == check.name);
+        corr ? corr.correct++ : eval.push({word:check, correct: 1});
+    }
+    for(let i = incorrect.length - 1; i >= 0; i--){
+        let check = incorrect.pop();
+        if(!eval.find(element => element.word.name == check.name))eval.push({word:check, correct:0});
+    }
+    //EVALUATE AND REPOPULATE CORRECT AND INCORRECT
+    for(let i = eval.length - 1; i >= 0; i--){
+        let check = eval[i];
+        (check.correct/reps) > 0.6 ? correct.push(check.word) : incorrect.push(check.word);
+    }
 }
 
 function gameOver(){
@@ -182,6 +227,7 @@ function gameOver(){
     tr.appendChild(tdi);
     tdi.appendChild(uli);
 
+    evalResults();
     //correct.words
     for(let w of correct){
         let li = document.createElement('li');
@@ -194,7 +240,6 @@ function gameOver(){
         li.innerHTML = w.name;
         uli.appendChild(li);
     }
-
     //ADD A RESET BUTTON || RETURN TO MAIN MENU
     const resetbtn = document.createElement('button');
     resetbtn.type = 'button';
@@ -231,10 +276,15 @@ function gameOver(){
     specialbtn.type = 'button';
     specialbtn.innerHTML = 'Special Focus';
     specialbtn.className = 'resetbtn';
+    if(!incorrect.length)specialbtn.disabled = 'true';
     specialbtn.addEventListener('click', () => {
         //update the deck
         let sfname = `${deck.name} ***SPECIAL FOCUS***`;
-        deck = new List(sfname, incorrect);
+        let sflist = [];
+        for(let i = reps; i > 0; i--){
+            sflist = sflist.concat(incorrect);
+        }
+        deck = new List(sfname, sflist);
         //reset global variables
         current = 0;
         hand = [];

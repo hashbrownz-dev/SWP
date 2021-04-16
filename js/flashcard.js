@@ -70,9 +70,11 @@ function startGame(){
 function transition(Correct){ //handles the transition between slides
     //if correct add the word to the correct list
     if(Correct){
+        _sndYes.currentTime = 0;
         _sndYes.play();
         correct.push(deck.words[current]);
     }else{
+        _sndNo.currentTime = 0;
         _sndNo.play();
         incorrect.push(deck.words[current]);
     }

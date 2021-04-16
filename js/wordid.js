@@ -48,6 +48,7 @@ function startGame(){
             if(selection.card.name == deck.words[current].name){
                 //You're Right!
                 //Display Correct Message
+                _sndYes.currentTime = 0;
                 _sndYes.play();
                 if(guesses == 0){
                     correct.push(deck.words[current]);
@@ -59,6 +60,7 @@ function startGame(){
             }else{
                 //You're Wrong!
                 //play a sad sound
+                _sndNo.currentTime = 0;
                 _sndNo.play();
                 //disable the button that was wrong
                 selection.btn.className = 'word incorrect';
@@ -120,6 +122,7 @@ function drawCard(){
         button.className = 'word';
         button.innerHTML = card.name;
         button.addEventListener('click', () => {
+            _sndSelect.currentTime = 0;
             _sndSelect.play();
             selection = {card:card , btn:button};
             //deselect all of the other cards

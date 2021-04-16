@@ -9,6 +9,7 @@ class Letter{
         this.audio = new Audio(audio);
     }
     get sound(){
+        this.audio.currentTime = 0;
         this.audio.play();
     }
 }
